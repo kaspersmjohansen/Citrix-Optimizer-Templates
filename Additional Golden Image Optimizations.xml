@@ -8,7 +8,7 @@
     <description>Should be run after the Windows template provided by Citrix. This template provides additional optimizations to the operating system</description>
     <category>OS Optimizations</category>
     <author>Kasper Johansen, edgemo - kjo@edgemo.com</author>
-    <lastupdatedate>10-31-2020</lastupdatedate>
+    <lastupdatedate>12-31-2020</lastupdatedate>
     <rollback_not_supported />
   </metadata>
   <group>
@@ -79,7 +79,7 @@ Start-Process -Wait "$env:SystemRoot\Microsoft.Net\Framework64\v4.0.30319\ngen.e
     <entry>
       <name>Set Power Plan to High Performance</name>
       <description>Configures the active power plan to High Performance</description>
-      <execute>1</execute>
+      <execute>0</execute>
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
@@ -139,7 +139,7 @@ Start-Process -Wait "powercfg.exe" -Argumentlist  "/change disk-timeout-dc 0"</v
       <name>Citrix WEM User Logon Service</name>
       <description>Disables the Citrix WEM User Logon Service. 
 The service it not used, unless you are managing Windows devices via Citrix Endpoint Management.</description>
-      <execute>1</execute>
+      <execute>0</execute>
       <action>
         <plugin>Services</plugin>
         <params>
@@ -186,12 +186,25 @@ Remove-Item -Path "${env:ProgramFiles(x86)}\Citrix\Workspace Environment Managem
     <entry>
       <name>Set Windows SAN Policy to OnlineALL</name>
       <description>Configures all connected storage to be Online.</description>
-      <execute>1</execute>
+      <execute>0</execute>
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
           <value>Set-StorageSetting -NewDiskPolicy OnlineAll
 </value>
+        </executeparams>
+      </action>
+      <analyze_not_supported />
+      <rollback_not_supported />
+    </entry>
+    <entry>
+      <name>Azure AD Hybrid leave</name>
+      <description>Configures the golden image machine to leave the Azure AD and no longer be a hybrid Azure AD joined</description>
+      <execute>1</execute>
+      <action>
+        <plugin>PowerShell</plugin>
+        <executeparams>
+          <value>Start-Process -Wait "$env:windir\system32\dsregcmd.exe" -Argumentlist "/leave"</value>
         </executeparams>
       </action>
       <analyze_not_supported />
@@ -415,7 +428,7 @@ Start-Process -Wait "$env:ProgramFiles\Windows Defender\mpcmdrun.exe" -ArgumentL
     <entry>
       <name>Office Automatic Updates 2.0</name>
       <description>Office Automatic Updates 2.0</description>
-      <execute>1</execute>
+      <execute>0</execute>
       <action>
         <plugin>SchTasks</plugin>
         <params>
@@ -430,7 +443,7 @@ Start-Process -Wait "$env:ProgramFiles\Windows Defender\mpcmdrun.exe" -ArgumentL
     <entry>
       <name>Office ClickToRun Service Monitor</name>
       <description>Office ClickToRun Service Monitor</description>
-      <execute>1</execute>
+      <execute>0</execute>
       <action>
         <plugin>SchTasks</plugin>
         <params>
@@ -445,7 +458,7 @@ Start-Process -Wait "$env:ProgramFiles\Windows Defender\mpcmdrun.exe" -ArgumentL
     <entry>
       <name>Office Feature Updates</name>
       <description>Office Feature Updates</description>
-      <execute>1</execute>
+      <execute>0</execute>
       <action>
         <plugin>SchTasks</plugin>
         <params>
@@ -460,7 +473,7 @@ Start-Process -Wait "$env:ProgramFiles\Windows Defender\mpcmdrun.exe" -ArgumentL
     <entry>
       <name>Office Feature Updates Logon</name>
       <description>Office Feature Updates Logon</description>
-      <execute>1</execute>
+      <execute>0</execute>
       <action>
         <plugin>SchTasks</plugin>
         <params>
@@ -475,7 +488,7 @@ Start-Process -Wait "$env:ProgramFiles\Windows Defender\mpcmdrun.exe" -ArgumentL
     <entry>
       <name>OfficeBackgroundTaskHandlerLogon</name>
       <description>OfficeBackgroundTaskHandlerLogon</description>
-      <execute>1</execute>
+      <execute>0</execute>
       <action>
         <plugin>SchTasks</plugin>
         <params>
@@ -490,7 +503,7 @@ Start-Process -Wait "$env:ProgramFiles\Windows Defender\mpcmdrun.exe" -ArgumentL
     <entry>
       <name>OfficeBackgroundTaskHandlerRegistration</name>
       <description>OfficeBackgroundTaskHandlerRegistration</description>
-      <execute>1</execute>
+      <execute>0</execute>
       <action>
         <plugin>SchTasks</plugin>
         <params>
@@ -505,7 +518,7 @@ Start-Process -Wait "$env:ProgramFiles\Windows Defender\mpcmdrun.exe" -ArgumentL
     <entry>
       <name>OfficeTelemetryAgentFallBack2016</name>
       <description>OfficeTelemetryAgentFallBack2016</description>
-      <execute>1</execute>
+      <execute>0</execute>
       <action>
         <plugin>SchTasks</plugin>
         <params>
@@ -520,7 +533,7 @@ Start-Process -Wait "$env:ProgramFiles\Windows Defender\mpcmdrun.exe" -ArgumentL
     <entry>
       <name>OfficeTelemetryAgentLogOn2016</name>
       <description>OfficeTelemetryAgentLogOn2016</description>
-      <execute>1</execute>
+      <execute>0</execute>
       <action>
         <plugin>SchTasks</plugin>
         <params>

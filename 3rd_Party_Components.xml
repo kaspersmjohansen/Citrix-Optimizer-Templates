@@ -2,13 +2,13 @@
 <root xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <metadata>
     <schemaversion>2.0</schemaversion>
-    <version>0.3</version>
+    <version>1.0</version>
     <id>D096E1F1-D90A-4BC3-8A67-EFD252708FF6</id>
-    <displayname>Disable 3rd Party Components</displayname>
-    <description>Disables 3rd party components (scheduled tasks and services) added by Adobe and Google</description>
+    <displayname>Disable 3rd Party Components (John Billekens)</displayname>
+    <description>Disables 3rd party components (scheduled tasks and services) added by Adobe and Google (John Billekens)</description>
     <category>OS Optimizations</category>
     <author>John Billekens</author>
-    <lastupdatedate>10-22-2020</lastupdatedate>
+    <lastupdatedate>2-06-2021</lastupdatedate>
   </metadata>
   <group>
     <id>Adobe</id>
@@ -28,7 +28,7 @@
       </action>
     </entry>
     <entry>
-      <name>Adobe Acrobat Update Service (ARM)</name>
+      <name>Adobe Acrobat Update Service (AdobeARMservice)</name>
       <description>Adobe Acrobat Updater keeps your Adobe software up to date.</description>
       <execute>1</execute>
       <action>
@@ -66,7 +66,7 @@
       </action>
     </entry>
     <entry>
-      <name>Adobe Flash Player Updater</name>
+      <name>Adobe Flash Player Updater Task</name>
       <description>This task keeps your Adobe Flash Player installation up to date with the latest enhancements and security fixes. If this task is disabled or removed, Adobe Flash Player will be unable to automatically secure your machine with the latest security fixes.</description>
       <execute>1</execute>
       <action>
@@ -79,13 +79,49 @@
       </action>
     </entry>
     <entry>
-      <name>Adobe Flash Player Updater Service</name>
+      <name>Adobe Flash Player Updater Service (AdobeFlashPlayerUpdateSvc)</name>
       <description>This service keeps your Adobe Flash Player installation up to date with the latest enhancements</description>
       <execute>1</execute>
       <action>
         <plugin>Services</plugin>
         <params>
           <name>AdobeFlashPlayerUpdateSvc</name>
+          <value>Disabled</value>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>Adobe Genuine Monitor Service (AGMService)</name>
+      <description>Adobe Genuine Monitor Service</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Services</plugin>
+        <params>
+          <name>AGMService</name>
+          <value>Disabled</value>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>Adobe Genuine Software Integrity Service (AGSService)</name>
+      <description>Adobe Genuine Software Integrity Service</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Services</plugin>
+        <params>
+          <name>AGSService</name>
+          <value>Disabled</value>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>Creative Cloud desktop app Update Service (AdobeUpdateService)</name>
+      <description>Creative Cloud desktop app Update Service</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Services</plugin>
+        <params>
+          <name>AdobeUpdateService</name>
           <value>Disabled</value>
         </params>
       </action>
@@ -151,7 +187,7 @@
     <displayname>Google</displayname>
     <description>Configures Google items</description>
     <entry>
-      <name>GoogleUpdateTaskMachineUA</name>
+      <name>GoogleUpdateTaskMachineUA Task</name>
       <description>Google Automatic Update Service</description>
       <execute>1</execute>
       <action>
@@ -164,7 +200,7 @@
       </action>
     </entry>
     <entry>
-      <name>GoogleUpdateTaskMachineCore</name>
+      <name>GoogleUpdateTaskMachineCore Task</name>
       <description>Google Automatic Update Core</description>
       <execute>1</execute>
       <action>
@@ -201,7 +237,7 @@
       </action>
     </entry>
     <entry>
-      <name>Google Chome Elevation Service</name>
+      <name>Google Chome Elevation Service (GoogleChromeElevationService)</name>
       <description>Currently the elevation service is only installed for Google Chrome builds. The Primary use case at the moment for the service has to do with the Chrome recovery component. The recovery component is registered only for Google Chrome builds. It repairs Chrome Updater (Google Update) when the algorithm detects that Chrome is not being updated. Since Chrome could be installed per-system or per-user, an elevation service is needed to repair code in the per-system install case.</description>
       <execute>1</execute>
       <action>
@@ -212,13 +248,80 @@
         </params>
       </action>
     </entry>
+    <entry>
+      <name>Google Update - Update policy override default Registry</name>
+      <description>Specifies the default policy for software updates from Google.
+(0) Updates disabled
+(1) Always allow updates
+(2) Manual updates only
+(3) Automatic silent updates only</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Registry</plugin>
+        <params>
+          <name>UpdateDefault</name>
+          <path>HKLM\SOFTWARE\Policies\Google\Update</path>
+          <value>0</value>
+          <valuetype>Dword</valuetype>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>Google Update - Auto-update check period override Registry</name>
+      <description>Minimum number of minutes between automatic update checks.
+Set the value to 0 if you want to disable all auto-update checks</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Registry</plugin>
+        <params>
+          <name>AutoUpdateCheckPeriodMinutes</name>
+          <path>HKLM\SOFTWARE\Policies\Google\Update</path>
+          <value>0</value>
+          <valuetype>Dword</valuetype>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>Google Update - Disable AutoUpdate Checks Registry</name>
+      <description>Disable AutoUpdate Checks
+(1) Disable automatic updates
+(0) Enable automatic updates</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Registry</plugin>
+        <params>
+          <name>DisableAutoUpdateChecksCheckboxValue</name>
+          <path>HKLM\SOFTWARE\Policies\Google\Update</path>
+          <value>1</value>
+          <valuetype>Dword</valuetype>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>Google Chrome Update - Update policy override Registry</name>
+      <description>Specifies how Google Update handles available Google Chrome updates from Google.
+(0) Updates disabled
+(1) Always allow updates
+(2) Manual updates only
+(3) Automatic silent updates only</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Registry</plugin>
+        <params>
+          <name>Update{8A69D345-D564-463C-AFF1-A69D9E530F96}</name>
+          <path>HKLM\SOFTWARE\Policies\Google\Update</path>
+          <value>0</value>
+          <valuetype>Dword</valuetype>
+        </params>
+      </action>
+    </entry>
   </group>
   <group>
     <id>Citrix</id>
     <displayname>Citrix</displayname>
     <description>XenServer Management Agent Automatic Update Service</description>
     <entry>
-      <name>Citrix Management Agent Auto-Updater</name>
+      <name>Citrix Management Agent Auto-Updater Task</name>
       <description>Citrix (Hypervisor) Management Agent Auto-Updater</description>
       <execute>1</execute>
       <action>
@@ -231,7 +334,7 @@
       </action>
     </entry>
     <entry>
-      <name>Citrix Personal vDisk Service</name>
+      <name>Citrix Personal vDisk Service (CitrixPvD)</name>
       <description>Citrix Personal vDisk Service</description>
       <execute>0</execute>
       <action>
@@ -243,8 +346,9 @@
       </action>
     </entry>
     <entry>
-      <name>Citrix Profile Manager Service</name>
-      <description>Citrix Profile Manager Service</description>
+      <name>Citrix Profile Manager Service (ctxProfile)</name>
+      <description>Citrix Profile Manager Service
+NOTE: the Desktop Ready Event logged by Citrix Profile Management (EventID 1000) is required for the Director to measure Login duration.</description>
       <execute>0</execute>
       <action>
         <plugin>Services</plugin>
@@ -260,7 +364,7 @@
     <displayname>Microsoft</displayname>
     <description>Configure Microsoft items</description>
     <entry>
-      <name>Configuration Manager Health Evaluation Task</name>
+      <name>MS SCCM - Configuration Manager Health Evaluation Task</name>
       <description>System Center Configuration Manager</description>
       <execute>1</execute>
       <action>
@@ -273,7 +377,7 @@
       </action>
     </entry>
     <entry>
-      <name>Configuration Manager Idle Detection Task</name>
+      <name>MS SCCM - Configuration Manager Idle Detection Task</name>
       <description>Configuration Manager Idle Detection</description>
       <execute>1</execute>
       <action>
@@ -286,7 +390,7 @@
       </action>
     </entry>
     <entry>
-      <name>Configuration Manager Maintenance Task</name>
+      <name>MS SCCM - Configuration Manager Maintenance Task</name>
       <description>Configuration Manager Maintenance</description>
       <execute>1</execute>
       <action>
@@ -299,7 +403,7 @@
       </action>
     </entry>
     <entry>
-      <name>System Center SMS Agent Host Service</name>
+      <name>MS SCCM - System Center SMS Agent Host Service (CCMExec)</name>
       <description>System Center SMS Agent Host Service</description>
       <execute>1</execute>
       <action>
@@ -311,7 +415,7 @@
       </action>
     </entry>
     <entry>
-      <name>OneDrive Per-Machine Standalone Update Task</name>
+      <name>MS OneDrive - OneDrive Per-Machine Standalone Update Task</name>
       <description>OneDrive Per-Machine Standalone Update Task</description>
       <execute>1</execute>
       <action>
@@ -324,8 +428,32 @@
       </action>
     </entry>
     <entry>
-      <name>MicrosoftEdgeUpdateTaskMachineCore</name>
-      <description>MicrosoftEdgeUpdateTaskMachineCore</description>
+      <name>MS Edge - Microsoft Edge Update Service (edgeupdate)</name>
+      <description>Keeps your Microsoft software up to date. If this service is disabled or stopped, your Microsoft software will not be kept up to date, meaning security vulnerabilities that may arise cannot be fixed and features may not work. This service uninstalls itself when there is no Microsoft software using it.</description>
+      <execute>0</execute>
+      <action>
+        <plugin>Services</plugin>
+        <params>
+          <name>edgeupdate</name>
+          <value>Disabled</value>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>MS Edge - Microsoft Edge Update Service (edgeupdatem)</name>
+      <description>Keeps your Microsoft software up to date. If this service is disabled or stopped, your Microsoft software will not be kept up to date, meaning security vulnerabilities that may arise cannot be fixed and features may not work. This service uninstalls itself when there is no Microsoft software using it.</description>
+      <execute>0</execute>
+      <action>
+        <plugin>Services</plugin>
+        <params>
+          <name>edgeupdatem</name>
+          <value>Disabled</value>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>MS Edge - MicrosoftEdgeUpdateTaskMachineCore Task</name>
+      <description>Keeps your Microsoft software up to date. If this task is disabled or stopped, your Microsoft software will not be kept up to date, meaning security vulnerabilities that may arise cannot be fixed and features may not work. This task uninstalls itself when there is no Microsoft software using it.</description>
       <execute>1</execute>
       <action>
         <plugin>SchTasks</plugin>
@@ -337,8 +465,8 @@
       </action>
     </entry>
     <entry>
-      <name>MicrosoftEdgeUpdateTaskMachineUA</name>
-      <description>MicrosoftEdgeUpdateTaskMachineUA</description>
+      <name>MS Edge - MicrosoftEdgeUpdateTaskMachineUA Task</name>
+      <description>Keeps your Microsoft software up to date. If this task is disabled or stopped, your Microsoft software will not be kept up to date, meaning security vulnerabilities that may arise cannot be fixed and features may not work. This task uninstalls itself when there is no Microsoft software using it.</description>
       <execute>1</execute>
       <action>
         <plugin>SchTasks</plugin>
@@ -350,43 +478,173 @@
       </action>
     </entry>
     <entry>
-      <name>MicrosoftEdgeUpdateBrowserReplacementTask</name>
-      <description>MicrosoftEdgeUpdateBrowserReplacementTask</description>
+      <name>MS O365 - Office Automatic Updates 2.0 Task</name>
+      <description>This task ensures that your Microsoft Office installation can check for updates.</description>
       <execute>1</execute>
       <action>
         <plugin>SchTasks</plugin>
         <params>
-          <name>MicrosoftEdgeUpdateBrowserReplacementTask</name>
-          <path>\</path>
+          <name>Office Automatic Updates 2.0</name>
+          <path>\Microsoft\Office\</path>
           <value>Disabled</value>
         </params>
       </action>
     </entry>
     <entry>
-      <name>Edge Update Service (gupdate)</name>
-      <description>Edge Update Service</description>
+      <name>MS O365 - Office ClickToRun Service Monitor Task</name>
+      <description>This task monitors the state of your Microsoft Office ClickToRunSvc and sends crash and error logs to Microsoft.</description>
       <execute>1</execute>
       <action>
-        <plugin>Services</plugin>
+        <plugin>SchTasks</plugin>
         <params>
-          <name>edgeupdate</name>
+          <name>Office ClickToRun Service Monitor</name>
+          <path>\Microsoft\Office\</path>
           <value>Disabled</value>
         </params>
       </action>
     </entry>
     <entry>
-      <name>Microsoft Edge Elevation Service</name>
-      <description>Microsoft Edge Elevation Service</description>
+      <name>MS O365 - Office Feature Updates Task</name>
+      <description>This task ensures that your Microsoft Office installation can check for feature updates.</description>
       <execute>1</execute>
       <action>
-        <plugin>Services</plugin>
+        <plugin>SchTasks</plugin>
         <params>
-          <name>MicrosoftEdgeElevationService</name>
+          <name>Office Feature Updates</name>
+          <path>\Microsoft\Office\</path>
           <value>Disabled</value>
         </params>
       </action>
-      <analyze_not_supported />
-      <rollback_not_supported />
+    </entry>
+    <entry>
+      <name>MS O365 - Office Feature Updates Logon Task</name>
+      <description>This task ensures that your Microsoft Office installation can check for feature updates.</description>
+      <execute>1</execute>
+      <action>
+        <plugin>SchTasks</plugin>
+        <params>
+          <name>Office Feature Updates Logon</name>
+          <path>\Microsoft\Office\</path>
+          <value>Disabled</value>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>MS O365 - Office Subscription Maintenance Task</name>
+      <description>Task used to ensure that the Microsoft Office Subscription licensing is current.</description>
+      <execute>0</execute>
+      <action>
+        <plugin>SchTasks</plugin>
+        <params>
+          <name>Office Subscription Maintenance</name>
+          <path>\Microsoft\Office\</path>
+          <value>Disabled</value>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>MS O365 - OfficeBackgroundTaskHandlerLogon Task</name>
+      <description>This task initiates Office Background Task Handler, which updates relevant Office data.</description>
+      <execute>1</execute>
+      <action>
+        <plugin>SchTasks</plugin>
+        <params>
+          <name>OfficeBackgroundTaskHandlerLogon</name>
+          <path>\Microsoft\Office\</path>
+          <value>Disabled</value>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>MS O365 - OfficeBackgroundTaskHandlerRegistration Task</name>
+      <description>This task initiates Office Background Task Handler, which updates relevant Office data.</description>
+      <execute>1</execute>
+      <action>
+        <plugin>SchTasks</plugin>
+        <params>
+          <name>OfficeBackgroundTaskHandlerRegistration</name>
+          <path>\Microsoft\Office\</path>
+          <value>Disabled</value>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>MS O365 - OfficeTelemetryAgentFallBack2016 Task</name>
+      <description>This task initiates the background task for Office Telemetry Agent, which scans and uploads usage and error information for Office solutions.</description>
+      <execute>1</execute>
+      <action>
+        <plugin>SchTasks</plugin>
+        <params>
+          <name>OfficeTelemetryAgentFallBack2016</name>
+          <path>\Microsoft\Office\</path>
+          <value>Disabled</value>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>MS O365 - OfficeTelemetryAgentLogOn2016 Task</name>
+      <description>This task initiates Office Telemetry Agent, which scans and uploads usage and error information for Office solutions when a user logs on to the computer.</description>
+      <execute>1</execute>
+      <action>
+        <plugin>SchTasks</plugin>
+        <params>
+          <name>OfficeTelemetryAgentLogOn2016</name>
+          <path>\Microsoft\Office\</path>
+          <value>Disabled</value>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>MS Defender - Windows Defender Cache Maintenance Task</name>
+      <description>Periodic maintenance task.</description>
+      <execute>1</execute>
+      <action>
+        <plugin>SchTasks</plugin>
+        <params>
+          <name>Windows Defender Cache Maintenance</name>
+          <path>\Microsoft\Windows\Windows Defender</path>
+          <value>Disabled</value>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>MS Defender - Windows Defender Cleanup Task</name>
+      <description>Periodic cleanup task.</description>
+      <execute>1</execute>
+      <action>
+        <plugin>SchTasks</plugin>
+        <params>
+          <name>Windows Defender Cleanup</name>
+          <path>\Microsoft\Windows\Windows Defender</path>
+          <value>Disabled</value>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>MS Defender - Windows Defender Scheduled Scan Task</name>
+      <description>Periodic scan task.</description>
+      <execute>1</execute>
+      <action>
+        <plugin>SchTasks</plugin>
+        <params>
+          <name>Windows Defender Scheduled Scan</name>
+          <path>\Microsoft\Windows\Windows Defender</path>
+          <value>Disabled</value>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>MS Defender - Windows Defender Verification Task</name>
+      <description>Periodic verification task.</description>
+      <execute>1</execute>
+      <action>
+        <plugin>SchTasks</plugin>
+        <params>
+          <name>Windows Defender Verification</name>
+          <path>\Microsoft\Windows\Windows Defender</path>
+          <value>Disabled</value>
+        </params>
+      </action>
     </entry>
   </group>
   <group>
@@ -394,7 +652,7 @@
     <displayname>Mozilla</displayname>
     <description>Configure Mozilla items</description>
     <entry>
-      <name>Mozilla Maintenance Service</name>
+      <name>Mozilla Maintenance Service (MozillaMaintenance)</name>
       <description>Mozilla Maintenance Service</description>
       <execute>1</execute>
       <action>
@@ -411,7 +669,7 @@
     <displayname>Ivanti</displayname>
     <description>Configure Ivanti items</description>
     <entry>
-      <name>Ivanti Automation Console Service</name>
+      <name>Ivanti Automation Console Service (RESWCS)</name>
       <description>Ivanti Automation Console Service</description>
       <execute>1</execute>
       <action>
@@ -419,6 +677,123 @@
         <params>
           <name>RESWCS</name>
           <value>Disabled</value>
+        </params>
+      </action>
+    </entry>
+  </group>
+  <group>
+    <id>Oracle</id>
+    <displayname>Oracle</displayname>
+    <description>Oracle Java settings</description>
+    <entry>
+      <name>Delete SunJavaUpdateSched (x64)</name>
+      <description>Delete Java update check autostart</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Registry</plugin>
+        <params>
+          <name>SunJavaUpdateSched</name>
+          <path>HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Run</path>
+          <value>CTXOE_DeleteValue</value>
+          <valuetype>String</valuetype>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>Delete SunJavaUpdateSched (x86)</name>
+      <description>Delete Java update check autostart</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Registry</plugin>
+        <params>
+          <name>SunJavaUpdateSched</name>
+          <path>HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run</path>
+          <value>CTXOE_DeleteValue</value>
+          <valuetype>String</valuetype>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>Disable Download Notify (x64)</name>
+      <description>Disable Download Notify</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Registry</plugin>
+        <params>
+          <name>NotifyDownload</name>
+          <path>HKLM\SOFTWARE\Wow6432Node\JavaSoft\Java Update\Policy</path>
+          <value>0</value>
+          <valuetype>Dword</valuetype>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>Disable Download Notify (x86)</name>
+      <description>Disable Download Notify</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Registry</plugin>
+        <params>
+          <name>NotifyDownload</name>
+          <path>HKLM\SOFTWARE\JavaSoft\Java Update\Policy</path>
+          <value>0</value>
+          <valuetype>Dword</valuetype>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>Disable Java auto update check (x64)</name>
+      <description>Disable Java auto update check</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Registry</plugin>
+        <params>
+          <name>EnableAutoUpdateCheck</name>
+          <path>HKLM\SOFTWARE\Wow6432Node\JavaSoft\Java Update\Policy</path>
+          <value>0</value>
+          <valuetype>Dword</valuetype>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>Disable Java auto update check (x86)</name>
+      <description>Disable Java auto update check</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Registry</plugin>
+        <params>
+          <name>EnableAutoUpdateCheck</name>
+          <path>HKLM\SOFTWARE\JavaSoft\Java Update\Policy</path>
+          <value>0</value>
+          <valuetype>Dword</valuetype>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>Disable Java update (x64)</name>
+      <description>Disable Java update</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Registry</plugin>
+        <params>
+          <name>EnableJavaUpdate</name>
+          <path>HKLM\SOFTWARE\Wow6432Node\JavaSoft\Java Update\Policy</path>
+          <value>0</value>
+          <valuetype>Dword</valuetype>
+        </params>
+      </action>
+    </entry>
+    <entry>
+      <name>Disable Java update (x86)</name>
+      <description>Disable Java update</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Registry</plugin>
+        <params>
+          <name>EnableJavaUpdate</name>
+          <path>HKLM\SOFTWARE\JavaSoft\Java Update\Policy</path>
+          <value>0</value>
+          <valuetype>Dword</valuetype>
         </params>
       </action>
     </entry>

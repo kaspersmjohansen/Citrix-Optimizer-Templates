@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata>
+    <schemaversion>2.0</schemaversion>
+    <version>1.0</version>
+    <id>6B0AE40A-694C-466A-B893-FB91DCEF2BA6</id>
+    <displayname>PreFlight Checks</displayname>
+    <description>Runs different post application and OS customization and installation tasks</description>
+    <category>OS Optimizations</category>
+    <author>Kasper Johansen</author>
+    <lastupdatedate>12-27-2020</lastupdatedate>
+    <analyze_not_supported />
+    <rollback_not_supported />
+  </metadata>
+  <group>
+    <id>Disk Management</id>
+    <displayname>Disk Management</displayname>
+    <description>Any offline disks are brought online and read only is disabled</description>
+    <analyze_not_supported />
+    <rollback_not_supported />
+    <entry>
+      <name>Bring any offline disks online</name>
+      <description>Any offline disks will made online and available.</description>
+      <execute>1</execute>
+      <action>
+        <plugin>PowerShell</plugin>
+        <executeparams>
+          <value>Get-Disk | where {$_.OperationalStatus -eq "Offline"} | Set-Disk -IsOffline $false</value>
+        </executeparams>
+      </action>
+      <analyze_not_supported />
+      <rollback_not_supported />
+    </entry>
+    <entry>
+      <name>Remove read only</name>
+      <description>If the disk is configured as read-only, it will be configured as read/write.</description>
+      <execute>1</execute>
+      <action>
+        <plugin>PowerShell</plugin>
+        <executeparams>
+          <value>Get-Disk | where {$_.IsReadOnly -eq "True"} | Set-Disk -IsReadOnly $false</value>
+        </executeparams>
+      </action>
+      <analyze_not_supported />
+      <rollback_not_supported />
+    </entry>
+  </group>
+  <group>
+    <id>Citrix Provisioning Cache Disk</id>
+    <displayname>Citrix Provisioning Cache Disk</displayname>
+    <description>If you have a "dummy" cache disk configured on your Golden Image machine, this will configure the drive letter to D.</description>
+    <analyze_not_supported />
+    <rollback_not_supported />
+    <entry>
+      <name>Remove Cache Disk Drive Letter</name>
+      <description>Remove the currently assigned drive letter</description>
+      <execute>1</execute>
+      <action>
+        <plugin>PowerShell</plugin>
+        <executeparams>
+          <value>$CacheDisk = Get-Volume | where {$_.DriveLetter -ne "C" -and $_.DriveLetter -ne $null -and $_.DriveType -ne "CD-ROM"}
+$CacheDiskDriveLetter = $CacheDisk.DriveLetter
+Get-Volume -DriveLetter $CacheDiskDriveLetter  | Get-Partition | Remove-PartitionAccessPath -accesspath "$CacheDiskDriveLetter`:"</value>
+        </executeparams>
+      </action>
+      <analyze_not_supported />
+      <rollback_not_supported />
+    </entry>
+    <entry>
+      <name>Configure drive letter - Optical Drive</name>
+      <description>Configure the optical drive to have drive letter E</description>
+      <execute>1</execute>
+      <action>
+        <plugin>PowerShell</plugin>
+        <executeparams>
+          <value># Configure optical drive driveletter to E:
+$OpticalDisk = Get-WmiObject win32_volume -Filter 'DriveType="5"'
+$OpticalDisk.DriveLetter = "E:"
+$OpticalDisk.Put()</value>
+        </executeparams>
+      </action>
+      <analyze_not_supported />
+      <rollback_not_supported />
+    </entry>
+    <entry>
+      <name>Configure drive letter - Cache Disk</name>
+      <description>Configures the the drive letter on the "dummy" cache disk to D</description>
+      <execute>1</execute>
+      <action>
+        <plugin>PowerShell</plugin>
+        <executeparams>
+          <value>$CacheDisk = Get-Volume | where {$_.DriveLetter -ne "C" -and $_.DriveType -ne "CD-ROM" -and $_.FileSystemType -ne "FAT32"}
+Get-Volume -FileSystemLabel $CacheDisk.FileSystemLabel | Get-Partition | Set-Partition -NewDriveLetter D</value>
+        </executeparams>
+      </action>
+      <analyze_not_supported />
+      <rollback_not_supported />
+    </entry>
+  </group>
+  <group>
+    <id>Miscellaneous</id>
+    <displayname>Miscellaneous</displayname>
+    <description>Miscellaneous and odd jobs</description>
+    <analyze_not_supported />
+    <rollback_not_supported />
+    <entry>
+      <name>Disable Server Manager</name>
+      <description>Disable the Windows Server Manager from appearing after logon</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Registry</plugin>
+        <params>
+          <name>DoNotOpenServerManagerAtLogon</name>
+          <path>HKLM\SOFTWARE\Microsoft\ServerManager</path>
+          <value>1</value>
+          <valuetype>Dword</valuetype>
+        </params>
+      </action>
+      <analyze_not_supported />
+      <rollback_not_supported />
+    </entry>
+    <entry>
+      <name>Windows Search</name>
+      <description>Configures the Windows Search service to automatic startup</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Services</plugin>
+        <params>
+          <name>WSearch</name>
+          <value>Automatic</value>
+        </params>
+      </action>
+      <analyze_not_supported />
+      <rollback_not_supported />
+    </entry>
+    <entry>
+      <name>Prefer IPv4</name>
+      <description>Disables IPv6</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Registry</plugin>
+        <params>
+          <name>DisabledComponents</name>
+          <path>HKLM\System\currentcontrolset\services\TCPIP6\Parameters</path>
+          <value>0x20</value>
+          <valuetype>Dword</valuetype>
+        </params>
+      </action>
+      <analyze_not_supported />
+      <rollback_not_supported />
+    </entry>
+    <entry>
+      <name>Set High Performance Power Scheme</name>
+      <description>Configures the power scheme to high performance</description>
+      <execute>1</execute>
+      <action>
+        <plugin>PowerShell</plugin>
+        <executeparams>
+          <value>PowerCfg.exe -s 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c</value>
+        </executeparams>
+      </action>
+      <analyze_not_supported />
+      <rollback_not_supported />
+    </entry>
+    <entry>
+      <name>Set Turn off the Display to never in current power plan</name>
+      <description>Configures the monitor/console to never turn off.</description>
+      <execute>1</execute>
+      <action>
+        <plugin>PowerShell</plugin>
+        <executeparams>
+          <value>PowerCfg.exe -change -monitor-timeout-ac 0</value>
+        </executeparams>
+      </action>
+      <analyze_not_supported />
+      <rollback_not_supported />
+    </entry>
+    <entry>
+      <name>Set LogOffCheckerStartupDelay to 10 sec</name>
+      <description>Configures Citrix LogOffCheckerStartupDelay to 10 seconds</description>
+      <execute>1</execute>
+      <action>
+        <plugin>Registry</plugin>
+        <params>
+          <name>LogoffCheckerStartupDelayInSeconds</name>
+          <path>HKLM\SYSTEM\CurrentControlSet\Control\Citrix\wfshell\TWI</path>
+          <value>0x0a</value>
+          <valuetype>Dword</valuetype>
+        </params>
+      </action>
+      <analyze_not_supported />
+      <rollback_not_supported />
+    </entry>
+    <entry>
+      <name>Azure AD Hybrid Join</name>
+      <description>hybrids joins the golden image machine to Azure AD</description>
+      <execute>1</execute>
+      <action>
+        <plugin>PowerShell</plugin>
+        <executeparams>
+          <value>C:\Windows\System32\dsregcmd.exe /join</value>
+        </executeparams>
+      </action>
+      <analyze_not_supported />
+      <rollback_not_supported />
+    </entry>
+    <entry>
+      <name>Configure Pagefile Size</name>
+      <description>Configures the pagefile size to a static size of 2 GB. 
+
+Change the $PageFileSize variable if you want a larger pagefile</description>
+      <execute>1</execute>
+      <action>
+        <plugin>PowerShell</plugin>
+        <executeparams>
+          <value>$PageFileSize = "2048"
+
+$System = Get-WmiObject Win32_ComputerSystem -EnableAllPrivileges
+$System.AutomaticManagedPagefile = $False
+$System.Put()
+
+$CurrentPageFile = Get-WmiObject -Query "Select * From Win32_PageFileSetting Where Name like '%pagefile.sys'"
+$CurrentPageFile.InitialSize = $PagefileSize
+$CurrentPageFile.MaximumSize = $PagefileSize
+$CurrentPageFile.Put()</value>
+        </executeparams>
+      </action>
+      <analyze_not_supported />
+      <rollback_not_supported />
+    </entry>
+  </group>
+</root>
