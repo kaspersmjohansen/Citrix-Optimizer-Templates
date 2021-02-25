@@ -8,7 +8,7 @@
     <description>Should be run after the Windows template provided by Citrix. This template provides additional optimizations to the operating system</description>
     <category>OS Optimizations</category>
     <author>Kasper Johansen, edgemo - kjo@edgemo.com</author>
-    <lastupdatedate>12-31-2020</lastupdatedate>
+    <lastupdatedate>2-25-2021</lastupdatedate>
     <rollback_not_supported />
   </metadata>
   <group>
@@ -23,9 +23,9 @@
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
-          <value>Start-Process -Wait "$env:SystemRoot\Microsoft.Net\Framework\v4.0.30319\ngen.exe" -Argumentlist "Update" -NoNewWindow
+          <value><![CDATA[Start-Process -Wait "$env:SystemRoot\Microsoft.Net\Framework\v4.0.30319\ngen.exe" -Argumentlist "Update" -NoNewWindow
 
-Start-Process -Wait "$env:SystemRoot\Microsoft.Net\Framework64\v4.0.30319\ngen.exe" -Argumentlist "Update" -NoNewWindow</value>
+Start-Process -Wait "$env:SystemRoot\Microsoft.Net\Framework64\v4.0.30319\ngen.exe" -Argumentlist "Update" -NoNewWindow]]></value>
         </executeparams>
       </action>
       <analyze_not_supported />
@@ -70,7 +70,7 @@ Start-Process -Wait "$env:SystemRoot\Microsoft.Net\Framework64\v4.0.30319\ngen.e
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
-          <value>Start-Process -Wait "powercfg.exe" -ArgumentList "-h off"</value>
+          <value><![CDATA[Start-Process -Wait "powercfg.exe" -ArgumentList "-h off"]]></value>
         </executeparams>
       </action>
       <analyze_not_supported />
@@ -83,9 +83,9 @@ Start-Process -Wait "$env:SystemRoot\Microsoft.Net\Framework64\v4.0.30319\ngen.e
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
-          <value>Start-Process -Wait "powercfg.exe" -Argumentlist "/setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"
+          <value><![CDATA[Start-Process -Wait "powercfg.exe" -Argumentlist "/setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"
 Start-Process -Wait "powercfg.exe" -Argumentlist "/change disk-timeout-ac 0"
-Start-Process -Wait "powercfg.exe" -Argumentlist  "/change disk-timeout-dc 0"</value>
+Start-Process -Wait "powercfg.exe" -Argumentlist  "/change disk-timeout-dc 0"]]></value>
         </executeparams>
       </action>
       <analyze_not_supported />
@@ -159,9 +159,9 @@ Does not support rollback!</description>
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
-          <value>Stop-Service -Name WemAgentSvc -Force
+          <value><![CDATA[Stop-Service -Name WemAgentSvc -Force
 
-Remove-Item -Path "${env:ProgramFiles(x86)}\Citrix\Workspace Environment Management Agent\Local Databases\*.*"</value>
+Remove-Item -Path "${env:ProgramFiles(x86)}\Citrix\Workspace Environment Management Agent\Local Databases\*.*"]]></value>
         </executeparams>
       </action>
       <analyze_not_supported />
@@ -190,8 +190,8 @@ Remove-Item -Path "${env:ProgramFiles(x86)}\Citrix\Workspace Environment Managem
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
-          <value>Set-StorageSetting -NewDiskPolicy OnlineAll
-</value>
+          <value><![CDATA[Set-StorageSetting -NewDiskPolicy OnlineAll
+]]></value>
         </executeparams>
       </action>
       <analyze_not_supported />
@@ -204,7 +204,7 @@ Remove-Item -Path "${env:ProgramFiles(x86)}\Citrix\Workspace Environment Managem
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
-          <value>Start-Process -Wait "$env:windir\system32\dsregcmd.exe" -Argumentlist "/leave"</value>
+          <value><![CDATA[Start-Process -Wait "$env:windir\system32\dsregcmd.exe" -Argumentlist "/leave"]]></value>
         </executeparams>
       </action>
       <analyze_not_supported />
@@ -227,11 +227,11 @@ https://carlwebster.com/set-sageset1-powershell-script-v1-10/</description>
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
-          <value>$CleanupReg = Get-ChildItem HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches
+          <value><![CDATA[$CleanupReg = Get-ChildItem HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches
 ForEach($reg in $CleanupReg)
 {
     #this is what is returned in $result.name:
-    #HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\&lt;some name&gt;
+    #HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\<some name>
     #change HKEY_LOCAL_MACHINE to HKLM:
     $tmp = 'HKLM:' + $reg.Name.Substring( 18 )
     $tmp2 = $reg.Name.SubString( $reg.Name.LastIndexOf( '\' ) + 1 )
@@ -244,7 +244,7 @@ ForEach($reg in $CleanupReg)
         }
 }
 
-Start-Process -Wait "cleanmgr.exe" -ArgumentList "d/$env:SystemDrive /AutoClean" -NoNewWindow</value>
+Start-Process -Wait "cleanmgr.exe" -ArgumentList "d/$env:SystemDrive /AutoClean" -NoNewWindow]]></value>
         </executeparams>
       </action>
       <analyze_not_supported />
@@ -257,11 +257,11 @@ Start-Process -Wait "cleanmgr.exe" -ArgumentList "d/$env:SystemDrive /AutoClean"
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
-          <value>Stop-Service -Name ctxProfile
+          <value><![CDATA[Stop-Service -Name ctxProfile
 
 Remove-Item -Path "$env:SystemRoot\System32\LogFiles\UserProfileManager\*"
 
-Remove-Item -Path "$env:ProgramFiles\Citrix\User Profile Manager\UPMPolicyDefaults_all.ini"</value>
+Remove-Item -Path "$env:ProgramFiles\Citrix\User Profile Manager\UPMPolicyDefaults_all.ini"]]></value>
         </executeparams>
       </action>
       <analyze_not_supported />
@@ -274,14 +274,14 @@ Remove-Item -Path "$env:ProgramFiles\Citrix\User Profile Manager\UPMPolicyDefaul
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
-          <value>Stop-Service -Name frxsvc -Verbose
+          <value><![CDATA[Stop-Service -Name frxsvc -Verbose
 Stop-service -Name frxccds -Verbose
 
 $GetFSLogixLogs = Get-ChildItem -Path "$env:ProgramData\FSLogix\Logs" -Recurse -Filter "*.log"
 ForEach ($logfile in $GetFSLogixLogs)
 {
 Remove-Item -Path $logfile.Fullname -Force -Verbose
-}</value>
+}]]></value>
         </executeparams>
       </action>
       <analyze_not_supported />
@@ -303,7 +303,7 @@ Disable this task if Golden Image is deployed via Citrix MCS</description>
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
-          <value>Start-Process -Wait "$env:windir\system32\cscript.exe" -ArgumentList "$env:windir\system32\slmgr.vbs /rearm" -NoNewWindow</value>
+          <value><![CDATA[Start-Process -Wait "$env:windir\system32\cscript.exe" -ArgumentList "$env:windir\system32\slmgr.vbs /rearm" -NoNewWindow]]></value>
         </executeparams>
       </action>
       <analyze_not_supported />
@@ -323,7 +323,7 @@ Disable this task if Golden Image is deployed via Citrix MCS</description>
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
-          <value>Start-Process -Wait "C:\Program Files (x86)\Microsoft Office\Office15\OSPPREARM.EXE" -NoNewWindow</value>
+          <value><![CDATA[Start-Process -Wait "C:\Program Files (x86)\Microsoft Office\Office15\OSPPREARM.EXE" -NoNewWindow]]></value>
         </executeparams>
       </action>
       <analyze_not_supported />
@@ -336,7 +336,7 @@ Disable this task if Golden Image is deployed via Citrix MCS</description>
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
-          <value>Start-Process -Wait "C:\Program Files\Microsoft Office\Office15\OSPPREARM.EXE" -NoNewWindow</value>
+          <value><![CDATA[Start-Process -Wait "C:\Program Files\Microsoft Office\Office15\OSPPREARM.EXE" -NoNewWindow]]></value>
         </executeparams>
       </action>
       <analyze_not_supported />
@@ -349,7 +349,7 @@ Disable this task if Golden Image is deployed via Citrix MCS</description>
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
-          <value>Start-Process -Wait "C:\Program Files (x86)\Microsoft Office\Office16\OSPPREARM.EXE" -NoNewWindow</value>
+          <value><![CDATA[Start-Process -Wait "C:\Program Files (x86)\Microsoft Office\Office16\OSPPREARM.EXE" -NoNewWindow]]></value>
         </executeparams>
       </action>
       <analyze_not_supported />
@@ -362,7 +362,7 @@ Disable this task if Golden Image is deployed via Citrix MCS</description>
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
-          <value>Start-Process -Wait "C:\Program Files\Microsoft Office\Office16\OSPPREARM.EXE" -NoNewWindow</value>
+          <value><![CDATA[Start-Process -Wait "C:\Program Files\Microsoft Office\Office16\OSPPREARM.EXE" -NoNewWindow]]></value>
         </executeparams>
       </action>
       <analyze_not_supported />
@@ -375,7 +375,7 @@ Disable this task if Golden Image is deployed via Citrix MCS</description>
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
-          <value>Start-Process -Wait "C:\Program Files (x86)\Microsoft Office\Office16\OSPPREARM.EXE" -NoNewWindow</value>
+          <value><![CDATA[Start-Process -Wait "C:\Program Files (x86)\Microsoft Office\Office16\OSPPREARM.EXE" -NoNewWindow]]></value>
         </executeparams>
       </action>
       <analyze_not_supported />
@@ -388,7 +388,7 @@ Disable this task if Golden Image is deployed via Citrix MCS</description>
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
-          <value>Start-Process -Wait "C:\Program Files\Microsoft Office\Office16\OSPPREARM.EXE" -NoNewWindow</value>
+          <value><![CDATA[Start-Process -Wait "C:\Program Files\Microsoft Office\Office16\OSPPREARM.EXE" -NoNewWindow]]></value>
         </executeparams>
       </action>
       <analyze_not_supported />
@@ -403,16 +403,16 @@ Disable this task if Golden Image is deployed via Citrix MCS</description>
     <rollback_not_supported />
     <entry>
       <name>Windows Defender Scanning</name>
-      <description>Performs a quick scan og the Golden Image.
+      <description>Performs a quick scan of the Golden Image.
 
 The Windows Defender definitions are updated via Microsoft Malware Protection Center</description>
       <execute>1</execute>
       <action>
         <plugin>PowerShell</plugin>
         <executeparams>
-          <value>Start-Process -Wait "$env:ProgramFiles\Windows Defender\mpcmdrun.exe" -ArgumentList "-SignatureUpdate -MMPC" -NoNewWindow
+          <value><![CDATA[Start-Process -Wait "$env:ProgramFiles\Windows Defender\mpcmdrun.exe" -ArgumentList "-SignatureUpdate -MMPC" -NoNewWindow
 
-Start-Process -Wait "$env:ProgramFiles\Windows Defender\mpcmdrun.exe" -ArgumentList "-Scan -scantype 1" -NoNewWindow</value>
+Start-Process -Wait "$env:ProgramFiles\Windows Defender\mpcmdrun.exe" -ArgumentList "-Scan -scantype 1" -NoNewWindow]]></value>
         </executeparams>
       </action>
       <analyze_not_supported />
